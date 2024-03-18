@@ -3,11 +3,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
-const authRouter = require("./routes/auth");
+const cors = require("cors");
+const authRouter = require("./routes/authRouter");
+const userRouter = require("./routes/userRouter");
+const conversationRouter = require("./routes/conversationRouter");
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 app.use(
   session({
     secret: process.env.SESSION_KEY,
@@ -25,7 +29,9 @@ async function main() {
   await mongoose.connect(mongoDB);
 }
 
-app.use("/", authRouter);
+app.use("/api", authRouter);
+app.use("/api", userRouter);
+app.use("/api", conversationRouter);
 
 app.use((err, req, res, next) => {
   if (res.headersSent) {

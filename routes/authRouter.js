@@ -38,13 +38,11 @@ passport.deserializeUser(async (id, done) => {
 });
 
 router.post("/login", (req, res, next) => {
+  console.log("Login route reached");
   passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-    if (!user) {
-      return res.status(401).json({ error: "Incorrect email or password" });
-    }
+    console.log("Passport authenticate callback");
+    if (err) { return next(err); }
+    if (!user) { return res.status(401).json({ message: info.message }); }
     req.logIn(user, (err) => {
       if (err) {
         return res.status(500).json({ error: "Internal Server Error" });
@@ -90,3 +88,4 @@ router.post("/signup", async function (req, res, next) {
 });
 
 module.exports = router;
+
