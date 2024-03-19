@@ -1,10 +1,12 @@
 const express = require("express");
 const Conversation = require("../models/conversation");
+const passport = require("passport");
 
 const router = express.Router();
 
-router.get("/conversation/", async function (req, res, next) {
-  const conversations = await Conversation.find({ participants: req.user._id }).populate("participants messages.sender");
+router.get("/conversation/", passport.authenticate("session"), async function (req, res, next) {
+  console.log(req.isAuthenticated());
+  const conversations = await Conversation.find({ participants: req.user }).populate("participants messages.sender");
   res.json({ conversations: conversations });
 });
 
