@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const conversationSchema = new Schema({
-  participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  participants: [{type: String }],
   messages: {
     type: [
       {
@@ -11,7 +11,6 @@ const conversationSchema = new Schema({
         timestamp: { type: Date, default: Date.now() },
       },
     ],
-    default: [],
   },
 });
 

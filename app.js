@@ -11,12 +11,18 @@ const conversationRouter = require("./routes/conversationRouter");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(
   session({
     secret: process.env.SESSION_KEY,
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { sameSite: "lax", maxAge: 3600000 },
   })
 );
 app.use(passport.initialize());

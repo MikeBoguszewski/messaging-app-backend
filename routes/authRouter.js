@@ -37,22 +37,11 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-router.post("/login", (req, res, next) => {
-  console.log("Login route reached");
-  passport.authenticate("local", (err, user, info) => {
-    console.log("Passport authenticate callback");
-    if (err) { return next(err); }
-    if (!user) { return res.status(401).json({ message: info.message }); }
-    req.logIn(user, (err) => {
-      if (err) {
-        return res.status(500).json({ error: "Internal Server Error" });
-      }
-      return res.status(200).json({ message: "Login successful", user });
-    });
-  })(req, res, next);
+router.post("/login", passport.authenticate("local"), (req, res) => {
+  res.status(200).json({ message: "Login successful", user: req.user });
 });
 
-router.post("/logout", function (req, res, next) {
+router.get("/logout", function (req, res, next) {
   req.logout(function (err) {
     if (err) {
       console.error(err);
@@ -88,4 +77,3 @@ router.post("/signup", async function (req, res, next) {
 });
 
 module.exports = router;
-
