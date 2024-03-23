@@ -5,7 +5,7 @@ const passport = require("passport");
 const router = express.Router();
 
 router.get("/conversation", passport.authenticate("session"), async function (req, res, next) {
-  const user = req.user.username
+  const user = req.user.username;
   const conversations = await Conversation.find({ participants: user }).populate("participants messages.sender");
   res.json({ conversations: conversations });
 });
