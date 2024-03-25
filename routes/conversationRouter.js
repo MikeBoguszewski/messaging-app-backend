@@ -31,8 +31,8 @@ router.post(
   });
 
 router.post("/conversation", passport.authenticate("session"), async function (req, res, next) {
-  const { otherParticipants } = req.body;
-  const newConversation = new Conversation({ participants: [req.user.username, ...otherParticipants] });
+  const { otherParticipant } = req.body;
+  const newConversation = new Conversation({ participants: [req.user.username, otherParticipant] });
   await newConversation.save();
   res.json({ newConversation: newConversation });
 });
