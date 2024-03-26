@@ -4,9 +4,10 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   username: { type: String, required: true },
+  description: { type: String },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  profile_picture_Url: { type: String },
+  profilePictureUrl: { type: String },
 });
 
 cloudinary.config({

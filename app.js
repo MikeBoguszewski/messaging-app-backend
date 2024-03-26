@@ -18,12 +18,6 @@ app.use(
   })
 );
 app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
-app.use(
   session({
     secret: process.env.SESSION_KEY,
     resave: true,
@@ -50,7 +44,7 @@ app.use((err, req, res, next) => {
     return next(err);
   }
   res.status(500);
-  res.render("error", { error: err });
+  console.error("error", err);
 });
 
 const port = process.env.PORT || 3000;
