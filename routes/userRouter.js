@@ -11,19 +11,31 @@ router.get("/user", passport.authenticate("session"), async function (req, res, 
   res.json({ username: req.user.username });
 });
 
+router.get("/user/profile/:username", passport.authenticate("session"), async function (req, res, next) {
+  const user = await User.findOne({ username: req.params.username });
+  res.json({ username: user.username, description: user.description, profilePictureUrl: user.profilePictureUrl });
+});
+
 router.get("/user/profile", passport.authenticate("session"), async function (req, res, next) {
   res.json({ username: req.user.username, description: req.user.description, profilePictureUrl: req.user.profilePictureUrl });
 });
 
 router.post("/user/update-profile", passport.authenticate("session"), upload.single("profilePicture"), async (req, res, next) => {
-  console.log(req.body);
-  console.log(req.file);
   try {
     let profilePictureUrl = null;
     if (req.file) {
       const userId = req.user._id;
       const filePath = req.file.path;
       profilePictureUrl = await User.uploadProfilePicture(userId, filePath);
+    }
+    const userWithUsername = await User.findOne({ username: req.body.username });
+    console.log(userWithUsername);
+    console.log(req.user);
+    if (!(userWithUsername._id.equals(req.user._id))) {
+      console.log(userWithUsername._id);
+      console.log(req.user._id);
+      console.log("Problem");
+      return res.status(409).json({ error: "Username is taken" });
     }
     const updatedProfile = await User.findByIdAndUpdate({ _id: req.user._id }, req.body);
     res.json({ profilePictureUrl: profilePictureUrl });
